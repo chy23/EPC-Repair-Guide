@@ -332,15 +332,12 @@ const GUIDE_DATA = [
 // 校園報修指南資料
 const REPAIR_INFO = {
   schoolName: "新北市林口區麗園國民小學",
-  unit: "教務處 資訊組",
-  phone: "(02) 2601-1010 分機 814 (資訊組)",
-  location: "迎曦樓 2 樓 資訊組辦公室",
   onlineFormUrl: "https://esa.ntpc.edu.tw/web-maintain/templates/maintain_pub.html?schno=014793",
   noticeItems: [
     "報修前請先記錄教室編號、設備型號（如主機 N4660、大螢幕品牌）。",
     "若為開機黑底白字，請先嘗試參照指南進行 BIOS 7 步驟重設。",
     "大屏觸控問題請先確認邊框粉筆灰已擦拭乾淨、USB 觸控線已重插。",
     "帳號密碼鎖定請依身分聯絡對應人員（學生與家長聯絡導師、教職員聯絡資訊組）。",
-    "如有緊急課堂教學需要，請直接撥打校內分機 814 聯繫資訊組協助。"
+    "若依然無法排除，請至線上報修系統填單，資訊組將儘速派員排查。"
   ]
 };

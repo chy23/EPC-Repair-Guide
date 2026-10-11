@@ -67,11 +67,13 @@
       </div>
       <p class="cover-hint-text">手機閱讀最佳化 ｜ 階層式引導 ｜ 步驟圖解</p>
       
-      <button class="cover-quick-repair-btn btn-repair-open" type="button" aria-label="直接查看報修資訊">
+      <button class="cover-quick-repair-btn btn-repair-open" type="button" aria-label="前往線上報修系統">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
         </svg>
-        直接查看報修電話與分機
+        前往線上報修系統
       </button>
     </div>
   </section>
@@ -230,7 +232,7 @@
     </main>
 
     <footer class="app-footer">
-      <p>若下列問題皆無法排除，請洽資訊組分機 814 報修。</p>
+      <p>若下列問題皆無法排除，請利用上方「報修」按鈕線上填報。</p>
     </footer>
   </section>
 
@@ -324,7 +326,7 @@
   <!-- ========================================================================
        共用元件：報修指引底部彈窗 (REPAIR MODAL SHEET)
        ======================================================================== -->
-  <div id="repair-modal" role="dialog" aria-modal="true" aria-label="報修資訊與分機">
+  <div id="repair-modal" role="dialog" aria-modal="true" aria-label="線上報修系統">
     <div class="repair-modal-sheet">
       <div class="sheet-handle"></div>
       
@@ -338,33 +340,19 @@
         <button class="sheet-close-btn" id="repair-modal-close" aria-label="關閉視窗">✕</button>
       </div>
 
-      <div class="repair-contact-card">
-        <div class="repair-contact-row">
-          <span>承辦單位：<strong>教務處 資訊組</strong></span>
-        </div>
-        <div class="repair-contact-row">
-          <span>校內分機：<strong>分機 814 (資訊組長)</strong></span>
-        </div>
-        <div class="repair-contact-row">
-          <span>組室位置：<strong>迎曦樓 2 樓 資訊組辦公室</strong></span>
-        </div>
+      <div class="repair-contact-card" style="text-align: center; gap: 0.9rem;">
+        <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.5; font-weight: 600;">
+          若依照排查指南仍無法解決電腦或設備異常，請點擊下方按鈕前往新北市校務行政線上報修系統填單：
+        </p>
         
         <!-- 線上報修主按鈕 -->
         <a class="btn-online-repair-primary" href="https://esa.ntpc.edu.tw/web-maintain/templates/maintain_pub.html?schno=014793" target="_blank" rel="noopener noreferrer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
             <line x1="10" y1="14" x2="21" y2="3"></line>
           </svg>
           前往麗園國小線上報修系統 ➔
-        </a>
-
-        <!-- 電話分機直撥按鈕 -->
-        <a class="btn-dial-direct" href="tel:0226011010,814">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-          </svg>
-          撥打校內分機 (02) 2601-1010 #814
         </a>
       </div>
 
@@ -375,7 +363,7 @@
           <li><strong>確認主機電源</strong>：主機久未通電開機出現黑底白字，請先參照指南執行 7 步 BIOS 設定。</li>
           <li><strong>大螢幕觸控異常</strong>：請先以布拭淨下邊框粉筆灰並重插 Touch USB 線。</li>
           <li><strong>帳號密碼鎖定</strong>：學生帳號請由班級導師至校務行政直接還原。</li>
-          <li><strong>緊急教學需求</strong>：課堂進行中若設備重大異常，請直接撥打分機 814 派員支援。</li>
+          <li><strong>詳細填報故障現象</strong>：於線上報修單簡述問題（如螢幕無畫面、觸控無反應），以利儘速派員排查。</li>
         </ul>
       </div>
 

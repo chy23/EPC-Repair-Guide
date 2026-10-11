@@ -1,5 +1,5 @@
 // Service Worker for Liyuan Computer Guide
-const CACHE_NAME = 'ly-guide-v2';
+const CACHE_NAME = 'ly-guide-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

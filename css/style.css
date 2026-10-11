@@ -1340,38 +1340,6 @@ body {
   background: #b91c1c;
   transform: translateY(-1px);
 }
-.btn-detail-quick-dial {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 0.55rem 0.95rem;
-  border-radius: var(--radius-full);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-detail-quick-dial:hover {
-  background: var(--bg-card-hover);
-}
-
-.btn-dial-direct {
-  background: #1d4ed8;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.92rem;
-  padding: 0.65rem 1rem;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);
-}
 
 .repair-tips-list {
   display: flex;
