@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnNextQuestion = document.getElementById("btn-next-question");
   const btnBackListBottom = document.getElementById("btn-back-list-bottom");
 
-  // 燈箱與報修彈窗
+  // 燈箱、報修彈窗與更新紀錄彈窗
   const imageLightbox = document.getElementById("image-lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
   const lightboxCaption = document.getElementById("lightbox-caption");
@@ -60,6 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const repairModal = document.getElementById("repair-modal");
   const repairModalClose = document.getElementById("repair-modal-close");
   const btnRepairTriggers = document.querySelectorAll(".btn-repair-open");
+
+  const changelogModal = document.getElementById("changelog-modal");
+  const changelogModalClose = document.getElementById("changelog-modal-close");
+  const btnChangelogTriggers = document.querySelectorAll(".btn-changelog-open");
+
   const themeToggleBtns = document.querySelectorAll(".theme-toggle-btn");
 
   let currentCategoryObj = null;
@@ -718,8 +723,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && imageLightbox.classList.contains("active")) {
-        closeLightbox();
+      if (e.key === "Escape") {
+        if (imageLightbox && imageLightbox.classList.contains("active")) {
+          closeLightbox();
+        }
+        if (repairModal && repairModal.classList.contains("active")) {
+          closeRepairModal();
+        }
+        if (changelogModal && changelogModal.classList.contains("active")) {
+          closeChangelogModal();
+        }
       }
     });
 
@@ -728,12 +741,32 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", openRepairModal);
     });
 
-    repairModalClose.addEventListener("click", closeRepairModal);
-    repairModal.addEventListener("click", (e) => {
-      if (e.target === repairModal) {
-        closeRepairModal();
-      }
+    if (repairModalClose) {
+      repairModalClose.addEventListener("click", closeRepairModal);
+    }
+    if (repairModal) {
+      repairModal.addEventListener("click", (e) => {
+        if (e.target === repairModal) {
+          closeRepairModal();
+        }
+      });
+    }
+
+    // 版本更新紀錄彈窗
+    btnChangelogTriggers.forEach(btn => {
+      btn.addEventListener("click", openChangelogModal);
     });
+
+    if (changelogModalClose) {
+      changelogModalClose.addEventListener("click", closeChangelogModal);
+    }
+    if (changelogModal) {
+      changelogModal.addEventListener("click", (e) => {
+        if (e.target === changelogModal) {
+          closeChangelogModal();
+        }
+      });
+    }
   }
 
   function openLightbox(src, title) {
@@ -759,6 +792,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeRepairModal() {
     repairModal.classList.remove("active");
     document.body.style.overflow = "";
+  }
+
+  function openChangelogModal() {
+    if (changelogModal) {
+      changelogModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function closeChangelogModal() {
+    if (changelogModal) {
+      changelogModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
   }
 
   /* ==========================================================================
