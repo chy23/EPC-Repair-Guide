@@ -1,19 +1,53 @@
 /**
- * 麗園國小常見電腦問題指南 - 核心應用程式邏輯
+ * 麗園國小常見電腦問題指南 - 核心應用程式邏輯 (分層式跳轉路由)
+ * 層級 0: 封面 (#cover)
+ * 層級 1: 大項目列表 (#categories)
+ * 層級 2: 細項問題清單 (#category/:id)
+ * 層級 3: 題目與解法詳解頁 (#question/:id)
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // DOM 元素快取
-  const coverView = document.getElementById("cover-view");
-  const mainContainer = document.getElementById("main-container");
-  const btnBackCover = document.getElementById("btn-back-cover");
-  const categoryTabsWrap = document.getElementById("category-tabs");
-  const guideContentArea = document.getElementById("guide-content-area");
-  const searchInput = document.getElementById("search-input");
-  const searchClearBtn = document.getElementById("search-clear-btn");
-  const emptySearchState = document.getElementById("empty-search-state");
-  const themeToggleBtn = document.getElementById("theme-toggle-btn");
+  // 檢視容器
+  const views = {
+    cover: document.getElementById("view-cover"),
+    categories: document.getElementById("view-categories"),
+    categoryQuestions: document.getElementById("view-category-questions"),
+    questionDetail: document.getElementById("view-question-detail")
+  };
+
+  // 封面相關
+  const btnBackToCover = document.getElementById("btn-back-to-cover");
   
+  // 大項目相關
+  const categoriesCardsGrid = document.getElementById("categories-cards-grid");
+  const categoriesMainList = document.getElementById("categories-main-list");
+  const globalSearchInput = document.getElementById("global-search-input");
+  const globalSearchClear = document.getElementById("global-search-clear");
+  const searchResultsContainer = document.getElementById("search-results-container");
+  const searchResultsList = document.getElementById("search-results-list");
+  const searchResultCount = document.getElementById("search-result-count");
+
+  // 細項問題列表相關
+  const btnBackToCategories = document.getElementById("btn-back-to-categories");
+  const crumbToCategories = document.getElementById("crumb-to-categories");
+  const crumbCategoryName = document.getElementById("crumb-category-name");
+  const subCategoryHeaderTitle = document.getElementById("sub-category-header-title");
+  const subCategoryHeaderBadge = document.getElementById("sub-category-header-badge");
+  const subCategoryBanner = document.getElementById("sub-category-banner");
+  const categoryQuestionsList = document.getElementById("category-questions-list");
+  const categoryQuestionsCount = document.getElementById("category-questions-count");
+
+  // 詳解頁相關
+  const btnBackToQuestions = document.getElementById("btn-back-to-questions");
+  const crumbDetailToCategories = document.getElementById("crumb-detail-to-categories");
+  const crumbDetailToQuestions = document.getElementById("crumb-detail-to-questions");
+  const crumbDetailTitle = document.getElementById("crumb-detail-title");
+  const detailCategoryBadge = document.getElementById("detail-category-badge");
+  const questionDetailContent = document.getElementById("question-detail-content");
+  const btnPrevQuestion = document.getElementById("btn-prev-question");
+  const btnNextQuestion = document.getElementById("btn-next-question");
+  const btnBackListBottom = document.getElementById("btn-back-list-bottom");
+
   // 燈箱與報修彈窗
   const imageLightbox = document.getElementById("image-lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
@@ -26,189 +60,292 @@ document.addEventListener("DOMContentLoaded", () => {
   const repairModal = document.getElementById("repair-modal");
   const repairModalClose = document.getElementById("repair-modal-close");
   const btnRepairTriggers = document.querySelectorAll(".btn-repair-open");
-  const fabToTop = document.getElementById("fab-to-top");
+  const themeToggleBtns = document.querySelectorAll(".theme-toggle-btn");
 
-  let currentCategory = "all";
+  let currentCategoryObj = null;
+  let currentQuestionObj = null;
   let currentZoom = 1;
 
-  // 1. 初始化深淺主題
+  // 1. 初始化主題
   initTheme();
 
-  // 2. 渲染分類按鈕與問題內容
-  renderCategoryTabs();
-  renderGuideContent();
+  // 2. 渲染大項目選單
+  renderCategoriesGrid();
 
-  // 3. 處理封面與主畫面的切換
-  initViewRouting();
+  // 3. 註冊路由與導航監聽
+  initRouter();
 
-  // 4. 搜尋與篩選事件
-  initSearchAndFilters();
+  // 4. 註冊搜尋事件
+  initSearch();
 
-  // 5. 燈箱手勢與縮放
-  initLightbox();
-
-  // 6. 報修彈窗與捲動事件
-  initModalsAndScroll();
+  // 5. 註冊燈箱與彈窗事件
+  initModals();
 
   /* ==========================================================================
-     畫面狀態與路由切換
+     路由與視圖切換
      ========================================================================== */
-  function initViewRouting() {
-    // 檢查網址是否有 hash（若有 hash 直接進入主畫面並展開對應問題）
-    const hash = window.location.hash;
-    if (hash && hash !== "#cover") {
-      showMainView(false);
-      handleHashNavigation(hash);
-    } else {
-      showCoverView(false);
-    }
-
-    // 點擊封面「空白處或任意處」進入主頁
-    coverView.addEventListener("click", (e) => {
-      // 若點擊的是封面上的快速報修按鈕，則不切換畫面，只開彈窗
+  function initRouter() {
+    // 點擊封面空白處進入大項目
+    views.cover.addEventListener("click", (e) => {
       if (e.target.closest(".cover-quick-repair-btn")) {
         e.stopPropagation();
         openRepairModal();
         return;
       }
-      showMainView(true);
+      navigateTo("#categories");
     });
 
-    // 點擊返回封面按鈕
-    btnBackCover.addEventListener("click", () => {
-      showCoverView(true);
-    });
+    // 返回封面
+    btnBackToCover.addEventListener("click", () => navigateTo("#cover"));
 
-    // 監聽瀏覽器前進/上一頁
-    window.addEventListener("popstate", () => {
-      const currentHash = window.location.hash;
-      if (!currentHash || currentHash === "#cover") {
-        showCoverView(false);
+    // 細項問題頁返回大項目
+    btnBackToCategories.addEventListener("click", () => navigateTo("#categories"));
+    crumbToCategories.addEventListener("click", () => navigateTo("#categories"));
+
+    // 詳解頁返回問題清單或大項目
+    crumbDetailToCategories.addEventListener("click", () => navigateTo("#categories"));
+    crumbDetailToQuestions.addEventListener("click", () => {
+      if (currentCategoryObj) {
+        navigateTo(`#category/${currentCategoryObj.id}`);
       } else {
-        showMainView(false);
-        handleHashNavigation(currentHash);
+        navigateTo("#categories");
       }
     });
-  }
-
-  function showCoverView(pushState = true) {
-    coverView.classList.remove("hidden-view");
-    mainContainer.classList.remove("active-view");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (pushState && window.location.hash !== "#cover") {
-      history.pushState(null, "", "#cover");
-    }
-  }
-
-  function showMainView(pushState = true) {
-    coverView.classList.add("hidden-view");
-    mainContainer.classList.add("active-view");
-    if (pushState && (!window.location.hash || window.location.hash === "#cover")) {
-      history.pushState(null, "", "#main");
-    }
-  }
-
-  function handleHashNavigation(hash) {
-    const targetId = hash.replace("#", "");
-    if (!targetId || targetId === "main") return;
-
-    // 若 hash 是問題 ID
-    setTimeout(() => {
-      const targetCard = document.getElementById(targetId);
-      if (targetCard) {
-        targetCard.classList.add("expanded");
-        targetCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    btnBackToQuestions.addEventListener("click", () => {
+      if (currentCategoryObj) {
+        navigateTo(`#category/${currentCategoryObj.id}`);
+      } else {
+        navigateTo("#categories");
       }
-    }, 150);
+    });
+    btnBackListBottom.addEventListener("click", () => {
+      if (currentCategoryObj) {
+        navigateTo(`#category/${currentCategoryObj.id}`);
+      } else {
+        navigateTo("#categories");
+      }
+    });
+
+    // 詳解頁上一題 / 下一題
+    btnPrevQuestion.addEventListener("click", () => {
+      if (!currentCategoryObj || !currentQuestionObj) return;
+      const idx = currentCategoryObj.items.findIndex(i => i.id === currentQuestionObj.id);
+      if (idx > 0) {
+        navigateTo(`#question/${currentCategoryObj.items[idx - 1].id}`);
+      }
+    });
+    btnNextQuestion.addEventListener("click", () => {
+      if (!currentCategoryObj || !currentQuestionObj) return;
+      const idx = currentCategoryObj.items.findIndex(i => i.id === currentQuestionObj.id);
+      if (idx < currentCategoryObj.items.length - 1) {
+        navigateTo(`#question/${currentCategoryObj.items[idx + 1].id}`);
+      }
+    });
+
+    // 監聽網址 Hash 變更
+    window.addEventListener("hashchange", handleRoute);
+
+    // 初始載入路由
+    handleRoute();
+  }
+
+  function navigateTo(hash) {
+    if (window.location.hash === hash) {
+      handleRoute();
+    } else {
+      window.location.hash = hash;
+    }
+  }
+
+  function handleRoute() {
+    const hash = window.location.hash || "#cover";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (hash === "#cover") {
+      switchView("cover");
+      return;
+    }
+
+    if (hash === "#categories") {
+      switchView("categories");
+      return;
+    }
+
+    if (hash.startsWith("#category/")) {
+      const catId = hash.replace("#category/", "");
+      const foundCat = GUIDE_DATA.find(c => c.id === catId);
+      if (foundCat) {
+        currentCategoryObj = foundCat;
+        renderCategoryQuestionsView(foundCat);
+        switchView("categoryQuestions");
+      } else {
+        navigateTo("#categories");
+      }
+      return;
+    }
+
+    if (hash.startsWith("#question/")) {
+      const qId = hash.replace("#question/", "");
+      let foundCat = null;
+      let foundItem = null;
+
+      for (const cat of GUIDE_DATA) {
+        const item = cat.items.find(i => i.id === qId);
+        if (item) {
+          foundCat = cat;
+          foundItem = item;
+          break;
+        }
+      }
+
+      if (foundCat && foundItem) {
+        currentCategoryObj = foundCat;
+        currentQuestionObj = foundItem;
+        renderQuestionDetailView(foundCat, foundItem);
+        switchView("questionDetail");
+      } else {
+        navigateTo("#categories");
+      }
+      return;
+    }
+
+    // 預設跳回封面
+    switchView("cover");
+  }
+
+  function switchView(viewName) {
+    Object.keys(views).forEach(key => {
+      if (key === viewName) {
+        views[key].classList.add("active");
+      } else {
+        views[key].classList.remove("active");
+      }
+    });
   }
 
   /* ==========================================================================
-     分類標籤與內容渲染
+     層級 1：渲染四大項目卡片清單
      ========================================================================== */
-  function renderCategoryTabs() {
-    let tabsHtml = `<button class="tab-pill active" data-cat="all">🌟 全部問題</button>`;
+  function renderCategoriesGrid() {
+    let html = "";
     GUIDE_DATA.forEach((cat) => {
-      tabsHtml += `<button class="tab-pill" data-cat="${cat.id}">${cat.shortTitle}</button>`;
+      html += `
+        <div class="category-select-card" data-cat-id="${cat.id}">
+          <div class="cat-card-left">
+            <div class="cat-icon-badge cat-${cat.color}">
+              ${getCategoryIcon(cat.icon)}
+            </div>
+            <div class="cat-card-body">
+              <span class="cat-card-top-tag">${cat.badge}</span>
+              <h3 class="cat-card-title">${cat.title}</h3>
+              <p class="cat-card-desc">${cat.description}</p>
+            </div>
+          </div>
+          <div class="cat-card-right">
+            <span class="cat-count-pill">${cat.items.length} 則問題</span>
+            <div class="cat-arrow-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </div>
+        </div>
+      `;
     });
-    categoryTabsWrap.innerHTML = tabsHtml;
 
-    // 綁定分頁點擊事件
-    categoryTabsWrap.querySelectorAll(".tab-pill").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        categoryTabsWrap.querySelectorAll(".tab-pill").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentCategory = btn.getAttribute("data-cat");
-        applyFilter();
+    categoriesCardsGrid.innerHTML = html;
+
+    // 點擊大項目卡片進入細項問題清單
+    categoriesCardsGrid.querySelectorAll(".category-select-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const catId = card.getAttribute("data-cat-id");
+        navigateTo(`#category/${catId}`);
       });
     });
   }
 
-  function renderGuideContent() {
-    let html = "";
+  /* ==========================================================================
+     層級 2：渲染細項問題列表頁
+     ========================================================================== */
+  function renderCategoryQuestionsView(category) {
+    // 麵包屑與標頭資訊
+    crumbCategoryName.textContent = category.shortTitle;
+    subCategoryHeaderTitle.textContent = category.shortTitle;
+    subCategoryHeaderBadge.textContent = `共 ${category.items.length} 題`;
 
-    GUIDE_DATA.forEach((cat) => {
-      html += `
-        <section class="category-section" id="section-${cat.id}" data-category-id="${cat.id}">
-          <div class="category-header-card">
-            <div class="cat-head-left">
-              <div class="cat-icon-badge cat-${cat.color}">
-                ${getCategoryIcon(cat.icon)}
-              </div>
-              <div class="cat-info">
-                <h2>${cat.title}</h2>
-                <p>${cat.description}</p>
-              </div>
+    // 分類導覽資訊橫幅
+    subCategoryBanner.innerHTML = `
+      <div class="cat-icon-badge cat-${category.color}">
+        ${getCategoryIcon(category.icon)}
+      </div>
+      <div class="cat-card-body">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); line-height: 1.35;">${category.title}</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">${category.description}</p>
+      </div>
+    `;
+
+    categoryQuestionsCount.textContent = `共 ${category.items.length} 則問題`;
+
+    // 問題列表卡片
+    let itemsHtml = "";
+    category.items.forEach((item, index) => {
+      itemsHtml += `
+        <article class="question-item-card" data-q-id="${item.id}">
+          <div class="q-card-content">
+            <span class="q-card-num-badge">問題 ${index + 1}</span>
+            <h4 class="q-card-title">${item.title}</h4>
+            <div class="q-card-tags">
+              ${(item.tags || []).slice(0, 3).map(t => `<span class="tag-badge">#${t}</span>`).join("")}
             </div>
-            <div class="cat-count-badge">${cat.items.length} 則指南</div>
           </div>
-          <div class="category-items-list">
-            ${cat.items.map((item) => renderProblemCard(item, cat)).join("")}
+          <div class="q-card-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </div>
-        </section>
+        </article>
       `;
     });
 
-    guideContentArea.innerHTML = html;
+    categoryQuestionsList.innerHTML = itemsHtml;
 
-    // 綁定所有手風琴卡片的點擊展開/收合
-    attachAccordionEvents();
+    // 點擊問題卡片進入詳解頁
+    categoryQuestionsList.querySelectorAll(".question-item-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const qId = card.getAttribute("data-q-id");
+        navigateTo(`#question/${qId}`);
+      });
+    });
   }
 
-  function renderProblemCard(item, category) {
-    return `
-      <article class="problem-card" id="${item.id}" data-tags="${(item.tags || []).join(' ').toLowerCase()}">
-        <div class="problem-header" role="button" tabindex="0" aria-expanded="false">
-          <div class="problem-title-group">
-            <span class="problem-q-badge">${category.badge}</span>
-            <h3 class="problem-title">${item.title}</h3>
-            <div class="problem-tags">
-              ${(item.tags || []).slice(0, 4).map(t => `<span class="tag-badge">#${t}</span>`).join("")}
-            </div>
-          </div>
-          <div class="accordion-chevron">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-        </div>
+  /* ==========================================================================
+     層級 3：渲染題目與解法獨立詳解頁
+     ========================================================================== */
+  function renderQuestionDetailView(category, item) {
+    // 麵包屑與標籤
+    crumbDetailToQuestions.textContent = category.shortTitle;
+    crumbDetailTitle.textContent = item.title;
+    detailCategoryBadge.textContent = category.badge;
 
-        <div class="problem-body">
-          <div class="problem-body-content">
-            ${renderProblemDetails(item)}
-          </div>
+    // 計算上一題 / 下一題按鈕狀態
+    const currentIndex = category.items.findIndex(i => i.id === item.id);
+    btnPrevQuestion.disabled = (currentIndex <= 0);
+    btnNextQuestion.disabled = (currentIndex >= category.items.length - 1);
+
+    // 組合詳解頁完整內容
+    let html = `
+      <div class="detail-headline-card">
+        <span class="detail-category-tag">${category.badge}</span>
+        <h2 class="detail-main-title">${item.title}</h2>
+        <div class="problem-tags">
+          ${(item.tags || []).map(t => `<span class="tag-badge">#${t}</span>`).join("")}
         </div>
-      </article>
+      </div>
     `;
-  }
 
-  function renderProblemDetails(item) {
-    let detailsHtml = "";
-
-    // 1. 原因分析區塊
+    // 1. 原因分析
     if (item.cause) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-cause">
           <div class="info-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            原因分析
+            【原因分析】
           </div>
           <p class="info-text">${item.cause}</p>
         </div>
@@ -217,24 +354,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. 單一解決方式
     if (item.solution) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-solution">
           <div class="info-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            解決方式
+            【解決方式】
           </div>
           <p class="info-text">${item.solution}</p>
         </div>
       `;
     }
 
-    // 3. 多重解決方式 (例如大屏、學生預設密碼逾期)
+    // 3. 多重解決方式
     if (item.solutions) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-solution">
           <div class="info-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            步驟與處置方法
+            【解決方式】
           </div>
           <ul class="styled-list">
             ${item.solutions.map(s => `
@@ -249,11 +386,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (item.solutionList) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-solution">
           <div class="info-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
-            解法（擇一執行）
+            【解決解法（擇一執行）】
           </div>
           <ul class="styled-list">
             ${item.solutionList.map(s => `
@@ -267,13 +404,13 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 4. N4660 BIOS 7 步驟專區（附精美圖解與點擊放大）
+    // 4. N4660 BIOS 7 步驟專屬區塊
     if (item.biosSteps) {
-      detailsHtml += `
+      html += `
         <div class="stepper-header">
           <h4>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line></svg>
-            N4660 主機 BIOS 設定 7 大步驟
+            N4660 主機 BIOS 設定步驟 (依序執行 1~7 步)
           </h4>
         </div>
         <div class="bios-steps-container">
@@ -306,10 +443,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 5. 網路連線參數表格 (eduroam)
+    // 5. 網路參數清單 (eduroam)
     if (item.details) {
-      detailsHtml += `
+      html += `
         <div class="spec-list">
+          <div style="font-weight: 700; margin-bottom: 0.2rem; color: var(--primary);">eduroam 連線參數設定對照</div>
           ${item.details.map(d => `
             <div class="spec-row">
               <span class="spec-name">${d.label}</span>
@@ -320,9 +458,20 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 6. 親師生平台重點清單
+    if (item.tips) {
+      html += `
+        <div class="info-block info-block-neutral">
+          <div class="info-label">連線優勢與秘訣</div>
+          <ul class="styled-list">
+            ${item.tips.map(t => `<li><span class="list-bullet">•</span><div>${t}</div></li>`).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
+    // 6. 親師生重點
     if (item.keyPoints) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-neutral">
           <div class="info-label">重點提示</div>
           <ul class="styled-list">
@@ -332,9 +481,9 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 7. 角色矩陣卡片 (忘記密碼找誰)
+    // 7. 角色矩陣卡片 (找誰還原)
     if (item.roles) {
-      detailsHtml += `
+      html += `
         <div class="roles-grid">
           ${item.roles.map(r => `
             <div class="role-card">
@@ -346,9 +495,9 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 8. 驗證步驟清單 (如何驗證備用信箱及行動電話)
+    // 8. 驗證步驟清單
     if (item.steps) {
-      detailsHtml += `
+      html += `
         <div class="bios-steps-container">
           ${item.steps.map(s => `
             <div class="bios-step-item">
@@ -369,10 +518,10 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 9. 圖片展示 (官方簡報截圖)
+    // 9. 圖片展示
     if (item.images && item.images.length > 0) {
-      detailsHtml += `
-        <div class="extra-images-grid" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+      html += `
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
           ${item.images.map(img => `
             <div class="step-image-wrap" data-img-src="${img.img}" data-img-title="${img.title}">
               <img src="${img.img}" alt="${img.title}" loading="lazy">
@@ -383,9 +532,9 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    // 10. 注意事項 / 註解
+    // 10. 注意事項
     if (item.precautions) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-notice">
           <div class="info-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -399,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (item.notes) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-neutral">
           <ul class="styled-list">
             ${item.notes.map(n => `<li><span class="list-bullet">※</span><div>${n}</div></li>`).join("")}
@@ -409,48 +558,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (item.notice) {
-      detailsHtml += `
+      html += `
         <div class="info-block info-block-notice">
-          <p class="info-text" style="font-weight: 600;">⚠️ ${item.notice}</p>
+          <p class="info-text" style="font-weight: 700;">⚠️ ${item.notice}</p>
         </div>
       `;
     }
 
-    return detailsHtml;
-  }
+    questionDetailContent.innerHTML = html;
 
-  function attachAccordionEvents() {
-    const headers = guideContentArea.querySelectorAll(".problem-header");
-    headers.forEach((header) => {
-      header.addEventListener("click", () => {
-        const card = header.closest(".problem-card");
-        const isExpanded = card.classList.contains("expanded");
-        
-        // 切換展開狀態
-        card.classList.toggle("expanded");
-        header.setAttribute("aria-expanded", !isExpanded);
-
-        // 如果展開了，更新 URL hash
-        if (!isExpanded) {
-          history.replaceState(null, "", `#${card.id}`);
-        }
-      });
-    });
-
-    // 圖片點擊放大事件
-    guideContentArea.querySelectorAll(".step-image-wrap").forEach((imgWrap) => {
-      imgWrap.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const src = imgWrap.getAttribute("data-img-src");
-        const title = imgWrap.getAttribute("data-img-title") || "放大檢視";
+    // 綁定放大圖片事件
+    questionDetailContent.querySelectorAll(".step-image-wrap").forEach(wrap => {
+      wrap.addEventListener("click", () => {
+        const src = wrap.getAttribute("data-img-src");
+        const title = wrap.getAttribute("data-img-title") || "放大檢視";
         openLightbox(src, title);
       });
     });
 
-    // 查看完整 BIOS 原始頁面按鈕
-    guideContentArea.querySelectorAll(".btn-view-full-bios").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
+    // 完整 BIOS 全圖
+    questionDetailContent.querySelectorAll(".btn-view-full-bios").forEach(btn => {
+      btn.addEventListener("click", () => {
         const pages = JSON.parse(btn.getAttribute("data-pages") || "[]");
         if (pages.length > 0) {
           openLightbox(pages[0].img, pages[0].title);
@@ -460,68 +588,84 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ==========================================================================
-     搜尋與篩選機制
+     搜尋功能 (跨分類快速搜尋)
      ========================================================================== */
-  function initSearchAndFilters() {
-    searchInput.addEventListener("input", () => {
-      applyFilter();
-    });
+  function initSearch() {
+    globalSearchInput.addEventListener("input", () => {
+      const query = globalSearchInput.value.trim().toLowerCase();
+      if (!query) {
+        categoriesMainList.style.display = "flex";
+        searchResultsContainer.style.display = "none";
+        return;
+      }
 
-    searchClearBtn.addEventListener("click", () => {
-      searchInput.value = "";
-      searchInput.focus();
-      applyFilter();
-    });
-  }
+      categoriesMainList.style.display = "none";
+      searchResultsContainer.style.display = "flex";
 
-  function applyFilter() {
-    const keyword = searchInput.value.trim().toLowerCase();
-    let visibleCount = 0;
-
-    const sections = guideContentArea.querySelectorAll(".category-section");
-
-    sections.forEach((section) => {
-      const catId = section.getAttribute("data-category-id");
-      const isCatMatch = (currentCategory === "all" || currentCategory === catId);
-
-      const cards = section.querySelectorAll(".problem-card");
-      let sectionVisibleCount = 0;
-
-      cards.forEach((card) => {
-        const cardText = card.innerText.toLowerCase();
-        const cardTags = card.getAttribute("data-tags") || "";
-        const isSearchMatch = !keyword || cardText.includes(keyword) || cardTags.includes(keyword);
-
-        if (isCatMatch && isSearchMatch) {
-          card.style.display = "block";
-          sectionVisibleCount++;
-          visibleCount++;
-
-          // 如果正在搜尋，自動展開吻合的問題以便閱讀
-          if (keyword) {
-            card.classList.add("expanded");
+      const matched = [];
+      GUIDE_DATA.forEach(cat => {
+        cat.items.forEach(item => {
+          const text = (item.title + " " + (item.cause || "") + " " + (item.solution || "") + " " + (item.tags || []).join(" ")).toLowerCase();
+          if (text.includes(query)) {
+            matched.push({ cat, item });
           }
-        } else {
-          card.style.display = "none";
-        }
+        });
       });
 
-      // 如果分類內無吻合項目，隱藏該分類區塊標題
-      section.style.display = (sectionVisibleCount > 0) ? "flex" : "none";
+      searchResultCount.textContent = `${matched.length} 筆`;
+
+      if (matched.length === 0) {
+        searchResultsList.innerHTML = `
+          <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <p style="font-weight: 700;">未找到與「${query}」相關的問題</p>
+            <p style="font-size: 0.85rem; margin-top: 0.2rem;">請嘗試不同關鍵字，或利用上方「報修專區」聯繫資訊組。</p>
+          </div>
+        `;
+        return;
+      }
+
+      let resHtml = "";
+      matched.forEach(({ cat, item }) => {
+        resHtml += `
+          <article class="question-item-card" data-q-id="${item.id}">
+            <div class="q-card-content">
+              <span class="q-card-num-badge">${cat.shortTitle}</span>
+              <h4 class="q-card-title">${item.title}</h4>
+              <div class="q-card-tags">
+                ${(item.tags || []).slice(0, 3).map(t => `<span class="tag-badge">#${t}</span>`).join("")}
+              </div>
+            </div>
+            <div class="q-card-arrow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </article>
+        `;
+      });
+
+      searchResultsList.innerHTML = resHtml;
+
+      searchResultsList.querySelectorAll(".question-item-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const qId = card.getAttribute("data-q-id");
+          navigateTo(`#question/${qId}`);
+        });
+      });
     });
 
-    // 無結果提示
-    if (visibleCount === 0) {
-      emptySearchState.classList.add("active");
-    } else {
-      emptySearchState.classList.remove("active");
-    }
+    globalSearchClear.addEventListener("click", () => {
+      globalSearchInput.value = "";
+      categoriesMainList.style.display = "flex";
+      searchResultsContainer.style.display = "none";
+      globalSearchInput.focus();
+    });
   }
 
   /* ==========================================================================
-     圖片燈箱 (LIGHTBOX)
+     圖片燈箱與報修彈窗
      ========================================================================== */
-  function initLightbox() {
+  function initModals() {
+    // 燈箱
     lightboxCloseBtn.addEventListener("click", closeLightbox);
     imageLightbox.addEventListener("click", (e) => {
       if (e.target === imageLightbox || e.target.classList.contains("lightbox-img-stage")) {
@@ -531,17 +675,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     lightboxZoomIn.addEventListener("click", () => {
       currentZoom = Math.min(currentZoom + 0.3, 3);
-      updateLightboxZoom();
+      lightboxImg.style.transform = `scale(${currentZoom})`;
     });
 
     lightboxZoomOut.addEventListener("click", () => {
       currentZoom = Math.max(currentZoom - 0.3, 0.8);
-      updateLightboxZoom();
+      lightboxImg.style.transform = `scale(${currentZoom})`;
     });
 
     lightboxZoomReset.addEventListener("click", () => {
       currentZoom = 1;
-      updateLightboxZoom();
+      lightboxImg.style.transform = `scale(1)`;
     });
 
     document.addEventListener("keydown", (e) => {
@@ -549,31 +693,8 @@ document.addEventListener("DOMContentLoaded", () => {
         closeLightbox();
       }
     });
-  }
 
-  function openLightbox(src, title) {
-    lightboxImg.src = src;
-    lightboxCaption.textContent = title;
-    currentZoom = 1;
-    updateLightboxZoom();
-    imageLightbox.classList.add("active");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeLightbox() {
-    imageLightbox.classList.remove("active");
-    document.body.style.overflow = "";
-    lightboxImg.src = "";
-  }
-
-  function updateLightboxZoom() {
-    lightboxImg.style.transform = `scale(${currentZoom})`;
-  }
-
-  /* ==========================================================================
-     報修彈窗與捲動行為
-     ========================================================================== */
-  function initModalsAndScroll() {
+    // 報修彈窗
     btnRepairTriggers.forEach(btn => {
       btn.addEventListener("click", openRepairModal);
     });
@@ -584,19 +705,21 @@ document.addEventListener("DOMContentLoaded", () => {
         closeRepairModal();
       }
     });
+  }
 
-    // 捲動至頂部按鈕
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 300) {
-        fabToTop.classList.add("visible");
-      } else {
-        fabToTop.classList.remove("visible");
-      }
-    }, { passive: true });
+  function openLightbox(src, title) {
+    lightboxImg.src = src;
+    lightboxCaption.textContent = title;
+    currentZoom = 1;
+    lightboxImg.style.transform = `scale(1)`;
+    imageLightbox.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
 
-    fabToTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+  function closeLightbox() {
+    imageLightbox.classList.remove("active");
+    document.body.style.overflow = "";
+    lightboxImg.src = "";
   }
 
   function openRepairModal() {
@@ -610,7 +733,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ==========================================================================
-     深淺色主題切換
+     主題控制
      ========================================================================== */
   function initTheme() {
     const savedTheme = localStorage.getItem("ly_theme");
@@ -622,27 +745,28 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.setAttribute("data-theme", "light");
     }
 
-    themeToggleBtn.addEventListener("click", () => {
-      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      const nextTheme = isDark ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", nextTheme);
-      localStorage.setItem("ly_theme", nextTheme);
+    themeToggleBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        const nextTheme = isDark ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("ly_theme", nextTheme);
+      });
     });
   }
 
-  // 圖示工具輔助函式
   function getCategoryIcon(type) {
     switch (type) {
       case "monitor":
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
       case "wifi":
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>`;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>`;
       case "key":
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2l-2 2m-2-2l2 2m-2 2l2-2m-2 2l-6.5 6.5a5.5 5.5 0 1 1-2.83-2.83L17 4l4-2z"></path></svg>`;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2l-2 2m-2-2l2 2m-2 2l2-2m-2 2l-6.5 6.5a5.5 5.5 0 1 1-2.83-2.83L17 4l4-2z"></path></svg>`;
       case "shield-check":
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>`;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>`;
       default:
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
     }
   }
 });

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>麗園國小常見電腦問題指南 | 校園電腦急救包</title>
-  <meta name="description" content="新北市林口區麗園國小校園常見電腦與資訊問題簡易排除指南。以手機閱讀為主要載具，涵蓋硬體BIOS設定、eduroam無線網路、校務系統密碼還原與雙因子驗證排除教學。">
+  <title>麗園國小常見電腦問題指南 | 校園問題解決手冊</title>
+  <meta name="description" content="新北市林口區麗園國小常見電腦問題解決指南，採分層式導航設計，以手機閱讀為主要載具。涵蓋班級硬體設備、網路連線、校務系統帳密與雙因子驗證。">
   <meta name="theme-color" content="#1e3a8a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,14 +21,12 @@
 <body>
 
   <!-- ========================================================================
-       1. 封面檢視 (COVER VIEW / 點擊任意處進入)
+       層級 0：封面畫面 (COVER VIEW - 點擊空白處進入大項目)
        ======================================================================== -->
-  <section id="cover-view" aria-label="歡迎封面">
-    <!-- 背景氛圍光暈 -->
+  <section id="view-cover" class="app-view active" aria-label="歡迎封面">
     <div class="cover-glow-1"></div>
     <div class="cover-glow-2"></div>
 
-    <!-- 頂部校名標章 -->
     <div class="cover-badge-wrap">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
@@ -37,10 +35,9 @@
       <span>新北市林口區麗園國小 資訊組</span>
     </div>
 
-    <!-- 中央標題與引導提示 -->
     <div class="cover-content">
       <div class="cover-icon-box">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
           <line x1="8" y1="21" x2="16" y2="21"></line>
           <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -60,18 +57,17 @@
       </div>
     </div>
 
-    <!-- 底部點擊進入引導指示 -->
     <div class="cover-prompt-box">
       <div class="cover-tap-pill">
-        <span>點擊空白處進入指南</span>
+        <span>點擊空白處進入大項目</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
         </svg>
       </div>
-      <p class="cover-hint-text">手機閱讀最佳化 ｜ 快速搜尋 ｜ 步驟圖解</p>
+      <p class="cover-hint-text">手機閱讀最佳化 ｜ 階層式引導 ｜ 步驟圖解</p>
       
-      <button class="cover-quick-repair-btn" type="button" aria-label="直接查看報修資訊">
+      <button class="cover-quick-repair-btn btn-repair-open" type="button" aria-label="直接查看報修資訊">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
         </svg>
@@ -82,15 +78,14 @@
 
 
   <!-- ========================================================================
-       2. 主指南內容容器 (MAIN GUIDE VIEW)
+       層級 1：大項目列表頁 (CATEGORIES VIEW)
        ======================================================================== -->
-  <div id="main-container">
-    
-    <!-- 頂端導航條 -->
+  <section id="view-categories" class="app-view">
+    <!-- 頂端共用導航 -->
     <header class="app-header">
       <div class="header-inner">
         <div class="header-left">
-          <button class="btn-icon-text" id="btn-back-cover" aria-label="返回封面">
+          <button class="btn-icon-text" id="btn-back-to-cover" aria-label="返回封面">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -98,20 +93,19 @@
           </button>
           <div class="header-title-box">
             <span class="header-title">麗園國小電腦指南</span>
-            <span class="header-badge">校園問題急救包</span>
+            <span class="header-badge">大項目選單</span>
           </div>
         </div>
 
         <div class="header-actions">
           <button class="btn-repair-trigger btn-repair-open" type="button" aria-label="開啟報修資訊">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
             </svg>
             <span>報修專區</span>
           </button>
-          
-          <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="切換深淺模式">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <button class="theme-toggle-btn" aria-label="切換深淺模式">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
               <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -127,7 +121,7 @@
       </div>
     </header>
 
-    <!-- 頂端跑馬式提醒橫幅 -->
+    <!-- 頂端報修提醒 -->
     <aside class="repair-notice-banner">
       <div class="notice-text">
         <span>⚠️ 如果仍無法解決問題請記得報修</span>
@@ -135,9 +129,8 @@
       <a class="notice-action-link btn-repair-open" role="button">查看報修指引 ➔</a>
     </aside>
 
-    <!-- 搜尋與分類導航區 -->
-    <section class="search-filter-section">
-      <!-- 快速關鍵字搜尋輸入框 -->
+    <!-- 搜尋工具列 -->
+    <div class="search-filter-section">
       <div class="search-bar-wrap">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="11" cy="11" r="8"></circle>
@@ -145,64 +138,170 @@
         </svg>
         <input 
           type="search" 
-          id="search-input" 
+          id="global-search-input" 
           class="search-input" 
-          placeholder="搜尋問題 (如: BIOS, 黑底白字, eduroam, 忘記密碼)..." 
+          placeholder="搜尋所有問題 (如: BIOS, 黑底白字, eduroam, 忘記密碼)..." 
           autocomplete="off"
-          aria-label="搜尋電腦問題指南"
         >
-        <button id="search-clear-btn" class="search-clear-btn" aria-label="清除搜尋">✕</button>
+        <button id="global-search-clear" class="search-clear-btn" aria-label="清除搜尋">✕</button>
+      </div>
+    </div>
+
+    <!-- 搜尋結果暫存列表 (搜尋時顯示) -->
+    <div id="search-results-container" class="search-results-area" style="display: none;">
+      <div class="section-title-wrap">
+        <h3 class="section-title">搜尋吻合結果</h3>
+        <span id="search-result-count" class="badge-count">0 筆</span>
+      </div>
+      <div id="search-results-list" class="question-cards-list"></div>
+    </div>
+
+    <!-- 四大項目卡片清單 (無搜尋時顯示) -->
+    <main class="categories-list-container" id="categories-main-list">
+      <div class="view-intro-box">
+        <h2 class="view-intro-title">請選擇問題類別</h2>
+        <p class="view-intro-desc">點擊下方任一大項目，進入查看細項問題與專屬排除指南：</p>
       </div>
 
-      <!-- 分類橫向滾動標籤 (Pill Tabs) -->
-      <nav class="category-tabs-wrap" id="category-tabs" aria-label="問題大項目分類">
-        <!-- 由 JavaScript 動態生成分類按鈕 -->
-      </nav>
-    </section>
-
-    <!-- 主內容手風琴列表 -->
-    <main class="guide-content-area" id="guide-content-area">
-      <!-- 由 JavaScript 依據 GUIDE_DATA 動態渲染 -->
+      <div class="categories-grid" id="categories-cards-grid">
+        <!-- 由 JavaScript 動態生成四大項目卡片 -->
+      </div>
     </main>
 
-    <!-- 搜尋無結果提示 -->
-    <div id="empty-search-state" class="empty-search-state">
-      <div class="empty-icon">🔍</div>
-      <div class="empty-text">找不到吻合的相關問題</div>
-      <p style="font-size: 0.88rem; color: var(--text-muted);">
-        若您遇到的問題不在常見清單中，請直接聯繫資訊組或利用「報修專區」填報。
-      </p>
-      <button class="btn-repair-trigger btn-repair-open" type="button" style="margin-top: 0.5rem;">
-        前往報修專區
+    <footer class="app-footer">
+      <p><strong>新北市林口區麗園國民小學</strong> 資訊教學與設備支援</p>
+      <p>校園常見電腦問題排查手冊 ｜ 手機分層導航版本</p>
+    </footer>
+  </section>
+
+
+  <!-- ========================================================================
+       層級 2：細項問題列表頁 (CATEGORY QUESTIONS VIEW)
+       ======================================================================== -->
+  <section id="view-category-questions" class="app-view">
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-icon-text" id="btn-back-to-categories" aria-label="返回大項目">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>大項目</span>
+          </button>
+          <div class="header-title-box">
+            <span class="header-title" id="sub-category-header-title">細項問題清單</span>
+            <span class="header-badge" id="sub-category-header-badge">請點選問題</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-repair-trigger btn-repair-open" type="button" aria-label="開啟報修資訊">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+            <span>報修</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 麵包屑導航 -->
+    <nav class="breadcrumb-bar" aria-label="路徑導航">
+      <span class="crumb-link" id="crumb-to-categories">首頁 (大項目)</span>
+      <span class="crumb-sep">›</span>
+      <span class="crumb-current" id="crumb-category-name">分類名稱</span>
+    </nav>
+
+    <!-- 分類主題資訊卡 -->
+    <div class="sub-category-banner" id="sub-category-banner">
+      <!-- 動態載入分類圖示與說明 -->
+    </div>
+
+    <!-- 細項問題卡片清單 -->
+    <main class="questions-list-container">
+      <div class="section-title-wrap">
+        <h3 class="section-title">點擊問題進入解答與步驟</h3>
+        <span class="badge-count" id="category-questions-count">共 0 題</span>
+      </div>
+
+      <div class="question-cards-list" id="category-questions-list">
+        <!-- 由 JavaScript 動態生成該分類的問題卡片 -->
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>若下列問題皆無法排除，請洽資訊組分機 814 報修。</p>
+    </footer>
+  </section>
+
+
+  <!-- ========================================================================
+       層級 3：題目與解法獨立詳解頁 (QUESTION DETAIL VIEW)
+       ======================================================================== -->
+  <section id="view-question-detail" class="app-view">
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-icon-text" id="btn-back-to-questions" aria-label="返回問題列表">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>問題列表</span>
+          </button>
+          <div class="header-title-box">
+            <span class="header-title">問題排查詳解</span>
+            <span class="header-badge" id="detail-category-badge">解決指南</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-repair-trigger btn-repair-open" type="button" aria-label="開啟報修資訊">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+            <span>報修</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 麵包屑導航 -->
+    <nav class="breadcrumb-bar" aria-label="路徑導航">
+      <span class="crumb-link" id="crumb-detail-to-categories">首頁</span>
+      <span class="crumb-sep">›</span>
+      <span class="crumb-link" id="crumb-detail-to-questions">大項目</span>
+      <span class="crumb-sep">›</span>
+      <span class="crumb-current" id="crumb-detail-title">問題詳解</span>
+    </nav>
+
+    <!-- 詳解內容容器 -->
+    <main class="question-detail-container" id="question-detail-content">
+      <!-- 由 JavaScript 動態生成題目、成因、解決方式、BIOS步驟、配圖 -->
+    </main>
+
+    <!-- 底部切換上一題 / 下一題按鈕 -->
+    <div class="detail-nav-footer">
+      <button class="nav-step-btn" id="btn-prev-question" aria-label="上一題">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>上一題</span>
+      </button>
+      <button class="btn-back-list-center" id="btn-back-list-bottom">
+        返回列表
+      </button>
+      <button class="nav-step-btn" id="btn-next-question" aria-label="下一題">
+        <span>下一題</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </button>
     </div>
 
-    <!-- 頁尾宣告 -->
     <footer class="app-footer">
-      <p><strong>新北市林口區麗園國民小學</strong> 資訊教學與設備支援</p>
-      <p>校園常見電腦問題排查手冊 ｜ 手機閱讀最佳化版本</p>
-      <p style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 0.4rem;">
-        © 2026 Liyuan Elementary School. Built for agile classroom support.
-      </p>
+      <p>操作後若依然異常，請利用上方「報修」按鈕通報。</p>
     </footer>
-
-  </div>
-
-
-  <!-- ========================================================================
-       3. 懸浮按鈕 (FLOATING ACTION BUTTONS)
-       ======================================================================== -->
-  <div class="floating-actions-bar">
-    <button class="fab-btn btn-to-top" id="fab-to-top" aria-label="返回頁面頂端">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-    </button>
-  </div>
+  </section>
 
 
   <!-- ========================================================================
-       4. 圖片燈箱放大檢視 (LIGHTBOX MODAL)
+       共用元件：圖片燈箱放大檢視 (LIGHTBOX MODAL)
        ======================================================================== -->
   <div id="image-lightbox" role="dialog" aria-modal="true" aria-label="圖片放大燈箱">
     <div class="lightbox-topbar">
@@ -223,7 +322,7 @@
 
 
   <!-- ========================================================================
-       5. 報修指引底部彈窗 (REPAIR MODAL SHEET)
+       共用元件：報修指引底部彈窗 (REPAIR MODAL SHEET)
        ======================================================================== -->
   <div id="repair-modal" role="dialog" aria-modal="true" aria-label="報修資訊與分機">
     <div class="repair-modal-sheet">
@@ -239,7 +338,6 @@
         <button class="sheet-close-btn" id="repair-modal-close" aria-label="關閉視窗">✕</button>
       </div>
 
-      <!-- 聯絡電話與直撥按鈕 -->
       <div class="repair-contact-card">
         <div class="repair-contact-row">
           <span>承辦單位：<strong>教務處 資訊組</strong></span>
@@ -258,7 +356,6 @@
         </a>
       </div>
 
-      <!-- 報修叮嚀清單 -->
       <div class="repair-tips-list">
         <h4>報修前注意事項清單：</h4>
         <ul>
@@ -277,7 +374,7 @@
   </div>
 
 
-  <!-- 載入應用程式資料與腳本 -->
+  <!-- 載入資料與控制邏輯 -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
 
