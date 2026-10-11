@@ -1,0 +1,17 @@
+{
+  "name": "麗園國小常見電腦問題指南",
+  "short_name": "麗園電腦指南",
+  "description": "新北市林口區麗園國小校園常見電腦與資訊問題簡易排除指南",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

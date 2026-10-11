@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>麗園國小常見電腦問題指南 | 校園電腦急救包</title>
+  <meta name="description" content="新北市林口區麗園國小校園常見電腦與資訊問題簡易排除指南。以手機閱讀為主要載具，涵蓋硬體BIOS設定、eduroam無線網路、校務系統密碼還原與雙因子驗證排除教學。">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="麗園電腦指南">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- 核心樣式 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. 封面檢視 (COVER VIEW / 點擊任意處進入)
+       ======================================================================== -->
+  <section id="cover-view" aria-label="歡迎封面">
+    <!-- 背景氛圍光暈 -->
+    <div class="cover-glow-1"></div>
+    <div class="cover-glow-2"></div>
+
+    <!-- 頂部校名標章 -->
+    <div class="cover-badge-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+      </svg>
+      <span>新北市林口區麗園國小 資訊組</span>
+    </div>
+
+    <!-- 中央標題與引導提示 -->
+    <div class="cover-content">
+      <div class="cover-icon-box">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+          <path d="M12 7v5l3 3" stroke="#60a5fa" stroke-width="2.5"></path>
+        </svg>
+      </div>
+
+      <h1 class="cover-title">麗園國小常見電腦問題指南</h1>
+      
+      <div class="cover-subtitle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>如果仍無法解決問題請記得報修</span>
+      </div>
+    </div>
+
+    <!-- 底部點擊進入引導指示 -->
+    <div class="cover-prompt-box">
+      <div class="cover-tap-pill">
+        <span>點擊空白處進入指南</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </div>
+      <p class="cover-hint-text">手機閱讀最佳化 ｜ 快速搜尋 ｜ 步驟圖解</p>
+      
+      <button class="cover-quick-repair-btn" type="button" aria-label="直接查看報修資訊">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        直接查看報修電話與分機
+      </button>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================
+       2. 主指南內容容器 (MAIN GUIDE VIEW)
+       ======================================================================== -->
+  <div id="main-container">
+    
+    <!-- 頂端導航條 -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-icon-text" id="btn-back-cover" aria-label="返回封面">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>封面</span>
+          </button>
+          <div class="header-title-box">
+            <span class="header-title">麗園國小電腦指南</span>
+            <span class="header-badge">校園問題急救包</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-repair-trigger btn-repair-open" type="button" aria-label="開啟報修資訊">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+            <span>報修專區</span>
+          </button>
+          
+          <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="切換深淺模式">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 頂端跑馬式提醒橫幅 -->
+    <aside class="repair-notice-banner">
+      <div class="notice-text">
+        <span>⚠️ 如果仍無法解決問題請記得報修</span>
+      </div>
+      <a class="notice-action-link btn-repair-open" role="button">查看報修指引 ➔</a>
+    </aside>
+
+    <!-- 搜尋與分類導航區 -->
+    <section class="search-filter-section">
+      <!-- 快速關鍵字搜尋輸入框 -->
+      <div class="search-bar-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="search" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="搜尋問題 (如: BIOS, 黑底白字, eduroam, 忘記密碼)..." 
+          autocomplete="off"
+          aria-label="搜尋電腦問題指南"
+        >
+        <button id="search-clear-btn" class="search-clear-btn" aria-label="清除搜尋">✕</button>
+      </div>
+
+      <!-- 分類橫向滾動標籤 (Pill Tabs) -->
+      <nav class="category-tabs-wrap" id="category-tabs" aria-label="問題大項目分類">
+        <!-- 由 JavaScript 動態生成分類按鈕 -->
+      </nav>
+    </section>
+
+    <!-- 主內容手風琴列表 -->
+    <main class="guide-content-area" id="guide-content-area">
+      <!-- 由 JavaScript 依據 GUIDE_DATA 動態渲染 -->
+    </main>
+
+    <!-- 搜尋無結果提示 -->
+    <div id="empty-search-state" class="empty-search-state">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">找不到吻合的相關問題</div>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">
+        若您遇到的問題不在常見清單中，請直接聯繫資訊組或利用「報修專區」填報。
+      </p>
+      <button class="btn-repair-trigger btn-repair-open" type="button" style="margin-top: 0.5rem;">
+        前往報修專區
+      </button>
+    </div>
+
+    <!-- 頁尾宣告 -->
+    <footer class="app-footer">
+      <p><strong>新北市林口區麗園國民小學</strong> 資訊教學與設備支援</p>
+      <p>校園常見電腦問題排查手冊 ｜ 手機閱讀最佳化版本</p>
+      <p style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 0.4rem;">
+        © 2026 Liyuan Elementary School. Built for agile classroom support.
+      </p>
+    </footer>
+
+  </div>
+
+
+  <!-- ========================================================================
+       3. 懸浮按鈕 (FLOATING ACTION BUTTONS)
+       ======================================================================== -->
+  <div class="floating-actions-bar">
+    <button class="fab-btn btn-to-top" id="fab-to-top" aria-label="返回頁面頂端">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+  </div>
+
+
+  <!-- ========================================================================
+       4. 圖片燈箱放大檢視 (LIGHTBOX MODAL)
+       ======================================================================== -->
+  <div id="image-lightbox" role="dialog" aria-modal="true" aria-label="圖片放大燈箱">
+    <div class="lightbox-topbar">
+      <span class="lightbox-caption" id="lightbox-caption">圖片檢視</span>
+      <button class="lightbox-close-btn" id="lightbox-close-btn" aria-label="關閉放大">✕</button>
+    </div>
+    
+    <div class="lightbox-img-stage">
+      <img id="lightbox-img" class="lightbox-img" src="" alt="放大截圖">
+    </div>
+
+    <div class="lightbox-controls">
+      <button class="lightbox-btn" id="lightbox-zoom-out" aria-label="縮小">🔍 - 縮小</button>
+      <button class="lightbox-btn" id="lightbox-zoom-reset" aria-label="重設">重設</button>
+      <button class="lightbox-btn" id="lightbox-zoom-in" aria-label="放大">🔍 + 放大</button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================
+       5. 報修指引底部彈窗 (REPAIR MODAL SHEET)
+       ======================================================================== -->
+  <div id="repair-modal" role="dialog" aria-modal="true" aria-label="報修資訊與分機">
+    <div class="repair-modal-sheet">
+      <div class="sheet-handle"></div>
+      
+      <div class="sheet-header">
+        <h3 class="sheet-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          麗園國小電腦設備報修專區
+        </h3>
+        <button class="sheet-close-btn" id="repair-modal-close" aria-label="關閉視窗">✕</button>
+      </div>
+
+      <!-- 聯絡電話與直撥按鈕 -->
+      <div class="repair-contact-card">
+        <div class="repair-contact-row">
+          <span>承辦單位：<strong>教務處 資訊組</strong></span>
+        </div>
+        <div class="repair-contact-row">
+          <span>校內分機：<strong>分機 814 (資訊組長)</strong></span>
+        </div>
+        <div class="repair-contact-row">
+          <span>組室位置：<strong>迎曦樓 2 樓 資訊組辦公室</strong></span>
+        </div>
+        <a class="btn-dial-direct" href="tel:0226011010,814">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          一鍵撥打校內分機 (02) 2601-1010 #814
+        </a>
+      </div>
+
+      <!-- 報修叮嚀清單 -->
+      <div class="repair-tips-list">
+        <h4>報修前注意事項清單：</h4>
+        <ul>
+          <li><strong>請記下教室編號</strong>（例如：402教室、自然科任一教室）。</li>
+          <li><strong>確認主機電源</strong>：主機久未通電開機出現黑底白字，請先參照指南執行 7 步 BIOS 設定。</li>
+          <li><strong>大螢幕觸控異常</strong>：請先以布拭淨下邊框粉筆灰並重插 Touch USB 線。</li>
+          <li><strong>帳號密碼鎖定</strong>：學生帳號請由班級導師至校務行政直接還原。</li>
+          <li><strong>緊急教學需求</strong>：課堂進行中若設備重大異常，請直接撥打分機 814 派員支援。</li>
+        </ul>
+      </div>
+
+      <a href="https://esa.ntpc.edu.tw" target="_blank" rel="noopener noreferrer" class="btn-secondary-action" style="text-decoration: none;">
+        連結至新北市校務行政系統 (esa.ntpc.edu.tw) ➔
+      </a>
+    </div>
+  </div>
+
+
+  <!-- 載入應用程式資料與腳本 -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Service Worker 離線快取註冊 -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
