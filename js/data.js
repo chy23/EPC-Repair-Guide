@@ -335,7 +335,7 @@ const REPAIR_INFO = {
   unit: "教務處 資訊組",
   phone: "(02) 2601-1010 分機 814 (資訊組)",
   location: "迎曦樓 2 樓 資訊組辦公室",
-  onlineFormUrl: "https://esa.ntpc.edu.tw",
+  onlineFormUrl: "https://esa.ntpc.edu.tw/web-maintain/templates/maintain_pub.html?schno=014793",
   noticeItems: [
     "報修前請先記錄教室編號、設備型號（如主機 N4660、大螢幕品牌）。",
     "若為開機黑底白字，請先嘗試參照指南進行 BIOS 7 步驟重設。",

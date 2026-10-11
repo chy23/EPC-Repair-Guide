@@ -565,7 +565,42 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
+    // 11. 仍無法解決？線上報修引導區塊
+    html += `
+      <div class="detail-repair-action-card">
+        <div class="repair-card-text">
+          <div style="font-weight: 800; font-size: 0.95rem; color: #991b1b; display: flex; align-items: center; gap: 0.4rem;">
+            <span>⚠️ 依照上述步驟若仍無法解決問題？</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #b91c1c; margin-top: 0.2rem;">
+            請記得通報報修，由資訊組派員或廠商協助處理。
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a href="https://esa.ntpc.edu.tw/web-maintain/templates/maintain_pub.html?schno=014793" target="_blank" rel="noopener noreferrer" class="btn-detail-online-repair">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            線上填寫報修單 (schno=014793) ➔
+          </a>
+          <button type="button" class="btn-detail-quick-dial btn-repair-open">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            分機 814
+          </button>
+        </div>
+      </div>
+    `;
+
     questionDetailContent.innerHTML = html;
+
+    // 重新綁定報修彈窗按鈕
+    questionDetailContent.querySelectorAll(".btn-repair-open").forEach(btn => {
+      btn.addEventListener("click", openRepairModal);
+    });
 
     // 綁定放大圖片事件
     questionDetailContent.querySelectorAll(".step-image-wrap").forEach(wrap => {
