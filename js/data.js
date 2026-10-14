@@ -72,6 +72,12 @@ const GUIDE_DATA = [
           { title: "N4660 BIOS 設定總圖 (第 2 頁)", img: "assets/images/bios_page_2.png" },
           { title: "N4660 BIOS 設定總圖 (第 3 頁)", img: "assets/images/bios_page_3.png" }
         ],
+        links: [
+          {
+            title: "BIOS 設定參數步驟圖片檔 (Google Drive 備用雲端資料夾)",
+            url: "https://drive.google.com/drive/folders/1asHcaOASLPvQ2CN-UvLiPet9oJML3GW3?usp=drive_link"
+          }
+        ],
         notice: "如果依上述 7 個步驟設定後依然無法正常進入 Windows 桌面，請利用上方「報修專區」通報資訊組處理。"
       },
       {
@@ -138,6 +144,12 @@ const GUIDE_DATA = [
           "『eduroam』為全球大專院校及新北市各級學校跨校通用漫遊，設定一次後，前往其他學校也能自動連線！",
           "無須提供網卡 MAC Address 給資訊組，隨連隨用最省時。",
           "若剛更改過校務行政系統密碼，請記得在手機/筆電忘記此 Wi-Fi 後重新輸入新密碼登入。"
+        ],
+        links: [
+          {
+            title: "eduroam 跨校漫遊無線網路操作設定說明 (Google Drive 文件)",
+            url: "https://drive.google.com/file/d/1qYtrzTUNMLptEArewyPfuPMF4kSJqHFq/view?usp=sharing"
+          }
         ]
       }
     ]
@@ -149,7 +161,7 @@ const GUIDE_DATA = [
     icon: "key",
     badge: "帳號與密碼",
     color: "amber",
-    description: "學生帳號密碼還原、預設密碼 3 日限制、忘記密碼、SSO 單一簽入與備用信箱驗證",
+    description: "學生帳號密碼還原、預設密碼 3 日限制、忘記密碼、SSO 單一簽入、備用信箱驗證與 Adobe 帳號啟用",
     items: [
       {
         id: "sys-1",
@@ -161,6 +173,12 @@ const GUIDE_DATA = [
           "還原權限：班級導師即可直接於系統操作，無須等待資訊組。",
           "還原密碼規則：出生年月日、身分證字號、同學生帳號（三選一，依導師還原時之設定）。",
           "還原後提醒：學生登入後請依照系統提示儘速自訂安全密碼。"
+        ],
+        links: [
+          {
+            title: "校務系統資安防護措施說明-學生版本 (新北市教育局 MIS 官方 PDF)",
+            url: "https://mis.ntpc.edu.tw/p/405-1001-13445,c417.php"
+          }
         ],
         images: [
           { title: "學生密碼安全措施說明", img: "assets/images/student_sec_2.png" }
@@ -265,6 +283,62 @@ const GUIDE_DATA = [
         extraImages: [
           { title: "教職員工驗證介面", img: "assets/images/staff_sec_15.png" },
           { title: "學生帳號驗證介面", img: "assets/images/student_sec_7.png" }
+        ]
+      },
+      {
+        id: "sys-7",
+        title: "新北市 Adobe 帳號啟用與 Acrobat PDF 專業版教學",
+        tags: ["Adobe", "Acrobat", "PDF", "親師生平台", "教育授權", "apps.ntpc.edu.tw", "呂聰賢", "PDF編輯", "授權啟動"],
+        cause: "教學與公務常需使用 PDF 編輯、合併、轉檔 Word 或數位填寫簽署，新北市教育局已為師生採購正版授權，需透過親師生平台完成帳號啟用認證。",
+        solution: "使用個人新北市 Google 帳號 (apps.ntpc.edu.tw) 註冊 Adobe，至親師生平台點選「Adobe (奧多比)」啟動授權，登入軟體時選取「公司或學校帳戶」即可免費享受正版完整功能！",
+        steps: [
+          {
+            stepNum: 1,
+            title: "確認新北市 Google 帳號",
+            desc: "先登入親師生平台 (play.ntpc.edu.tw) 或確認個人新北市 Google 帳號（格式為：<code>自訂帳號@apps.ntpc.edu.tw</code>）。"
+          },
+          {
+            stepNum: 2,
+            title: "前往 Adobe 官網註冊/登入",
+            desc: "前往 <a href='https://www.adobe.com/tw/' target='_blank' rel='noopener noreferrer' style='color:var(--primary);font-weight:700;'>Adobe 台灣官網</a>，使用上述新北市 Google 帳號進行註冊或確認已存在帳號。"
+          },
+          {
+            stepNum: 3,
+            title: "登入親師生平台進行授權啟動",
+            desc: "至新北市親師生平台 (play.ntpc.edu.tw)，搜尋並點選「Adobe (奧多比)」應用程式，輸入新北市 Google 帳號完成授權綁定。"
+          },
+          {
+            stepNum: 4,
+            title: "下載安裝 Acrobat Pro 專業版",
+            desc: "至 Adobe 官網或 Creative Cloud 桌面應用程式下載安裝 Acrobat 專業版 PDF 編輯器。"
+          },
+          {
+            stepNum: 5,
+            title: "登入時切換為新北市教育局授權",
+            desc: "開啟軟體登入時，若出現帳戶類型選單，請務必選擇「<strong>公司或學校帳戶（新北市教育局）</strong>」，即可享有完整正版功能並切換為繁體中文介面。"
+          }
+        ],
+        links: [
+          {
+            title: "新北市親師生平台 (play.ntpc.edu.tw) - 授權啟動入口",
+            url: "https://play.ntpc.edu.tw"
+          },
+          {
+            title: "Adobe 官方網站 (台灣)",
+            url: "https://www.adobe.com/tw/"
+          },
+          {
+            title: "Adobe Creative Cloud 桌面應用程式下載",
+            url: "https://creativecloud.adobe.com/apps/all/desktop"
+          },
+          {
+            title: "呂聰賢老師『Acrobat PDF 編輯神器』完整教學 (Padlet 講義與影音)",
+            url: "https://padlet.com/lubloger/acrobat-pdf-ea4hj8836ylewil3"
+          }
+        ],
+        tips: [
+          "若登入後顯示試用期或未授權，通常是因為登入時誤選了「個人帳戶」，請登出後重新登入並選取「公司或學校帳戶（新北市教育局）」。",
+          "呂聰賢老師教學看板內含豐富影音課程：包含論文 PDF 轉 Word、PDF 頁面旋轉/刪除/插入、電子簽章與表格填寫，推薦教職員工參閱運用。"
         ]
       }
     ]

@@ -570,6 +570,29 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
+    // 官方指引與外部延伸教材連結
+    if (item.links && item.links.length > 0) {
+      html += `
+        <div class="info-block info-block-neutral" style="gap: 0.65rem;">
+          <div class="info-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            官方指引與延伸教學連結
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${item.links.map(l => `
+              <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="btn-secondary-action" style="justify-content: space-between; text-decoration: none; font-size: 0.88rem; padding: 0.65rem 1rem; min-height: 44px; text-align: left; background: var(--bg-card);">
+                <span style="display: flex; align-items: center; gap: 0.5rem; min-width: 0;">
+                  <span style="font-size: 1.1rem; flex-shrink: 0;">🔗</span>
+                  <span style="font-weight: 700; color: var(--text-main); word-break: break-word;">${l.title}</span>
+                </span>
+                <span style="color: var(--primary); font-weight: 800; flex-shrink: 0; margin-left: 0.5rem;">➔</span>
+              </a>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
     // 11. 仍無法解決？線上報修引導區塊
     html += `
       <div class="detail-repair-action-card">
